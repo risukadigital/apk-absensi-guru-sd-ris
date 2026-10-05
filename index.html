@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Absensi Guru - SD Raudhah Islamic School</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1565C0">
+   <style>
+    body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #e8f5e9;
+    }
+
+    .box {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        border-top: 8px solid #1565C0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 5px;
+        color: color: #1565C0;
+    }
+
+    h2 {
+        text-align: center;
+        margin-top: 0;
+        color: #1565C0;
+    }
+
+    h3 {
+        color: #0D47A1;
+    }
+
+    select,
+    button,
+    input {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        font-size: 16px;
+        box-sizing: border-box;
+        border-radius: 8px;
+    }
+
+    select,
+    input {
+        border: 1px solid #9ccc9c;
+        background: #f8fff8;
+    }
+
+    button {
+        cursor: pointer;
+        border: none;
+        background: #1565C0;
+        color: white;
+        font-weight: bold;
+    }
+
+    button:hover {
+        background: #0D47A1;
+    }
+
+    #login-admin {
+        background: #f1f8e9;
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 5px solid #1565C0;
+    }
+
+    #panel-admin {
+        background: #fffde7;
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 5px solid #fbc02d;
+    }
+
+    #lokasi,
+    #waktu {
+        font-weight: bold;
+        color: #0D47A1;
+    }
+
+    #dataAbsensi {
+        background: #f8fff8;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    hr {
+        border: none;
+        border-top: 2px solid #c8e6c9;
+        margin: 20px 0;
+    }
+
+    video {
+        border-radius: 10px;
+        border: 3px solid #159447;
+    }
+
+    canvas {
+        max-width: 100%;
+        border-radius: 10px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <div style="text-align:center;">
+
+    <img
+        src="logo.png"
+        alt="Logo SMP Raudhah Islamic School"
+        style="width:120px; height:120px; object-fit:contain;"
+    >
+
+    <h1>ABSENSI GURU</h1>
+
+    <h2>SD RAUDHAH ISLAMIC SCHOOL</h2>
+
+    <p>Pulau Punjung Dharmasraya</p>
+
+</div>
+    <hr>
+
+    <!-- LOGIN ADMIN -->
+    <div id="login-admin">
+
+        <h3>Login Admin</h3>
+
+        <input
+            type="email"
+            id="emailAdmin"
+            placeholder="Email admin"
+        >
+
+        <input
+            type="password"
+            id="passwordAdmin"
+            placeholder="Password"
+        >
+
+        <button type="button" onclick="loginAdmin()">
+            Login
+        </button>
+
+        <p id="statusLogin"></p>
+
+    </div>
+
+
+    <!-- PANEL ADMIN -->
+    <div id="panel-admin" style="display:none;">
+
+        <hr>
+
+        <h3>Admin Data Guru</h3>
+
+        <!-- TAMBAH GURU -->
+
+        <input
+            type="text"
+            id="namaGuruBaru"
+            placeholder="Nama guru baru"
+        >
+
+        <button type="button" onclick="tambahGuru()">
+            + Tambah Guru
+        </button>
+
+
+        <!-- EDIT DAN NONAKTIFKAN -->
+
+        <div style="margin-top:20px;">
+
+            <h3>Edit Nama Guru</h3>
+
+            <select id="guruEdit">
+                <option value="">-- Pilih Guru --</option>
+            </select>
+
+            <input
+                type="text"
+                id="namaGuruEdit"
+                placeholder="Nama baru"
+            >
+
+            <button type="button" onclick="editGuru()">
+                Simpan Perubahan
+            </button>
+
+            <button type="button" onclick="nonaktifkanGuru()">
+                Nonaktifkan Guru
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ABSENSI GURU -->
+
+    <h3>Absensi Guru</h3>
+
+    <label for="guru">Pilih Guru:</label>
+
+    <select id="guru">
+        <option value="">-- Pilih Nama Guru --</option>
+    </select>
+
+    <br><br>
+
+    <button onclick="absenMasuk()">ABSEN MASUK</button>
+
+    <button onclick="absenPulang()">ABSEN PULANG</button>
+
+    <p>
+        Lokasi:
+        <span id="lokasi">Belum diperiksa</span>
+    </p>
+
+    <button onclick="cekLokasi()">CEK LOKASI</button>
+
+    <button onclick="bukaKamera()">BUKA KAMERA</button>
+
+    <br><br>
+
+    <video id="kamera" width="100%" autoplay></video>
+
+    <br><br>
+
+    <button onclick="ambilFoto()">AMBIL FOTO</button>
+
+    <br><br>
+
+    <canvas id="foto" width="400"></canvas>
+
+    <p>
+        Status Foto:
+        <span id="statusFoto">Belum diambil</span>
+    </p>
+
+    <p>
+        Tanggal dan waktu:
+        <span id="waktu">-</span>
+    </p>
+
+    <hr>
+
+    <h3>DATA ABSENSI</h3>
+<div style="margin:15px 0; padding:15px; background:#f1f8e9; border-radius:10px;">
+
+    <h3>REKAP ABSENSI BULANAN</h3>
+
+    <label for="bulanRekap">Pilih Bulan:</label>
+
+    <input
+        type="month"
+        id="bulanRekap"
+    >
+
+    <button type="button" onclick="tampilkanRekapBulanan()">
+        TAMPILKAN REKAP
+    </button>
+
+    <button type="button" onclick="downloadRekapBulanan()">
+        DOWNLOAD REKAP
+    </button>
+
+</div>
+
+<div id="hasilRekapBulanan">
+    Pilih bulan untuk melihat rekap.
+</div>
+<div style="margin:15px 0; padding:15px; background:#f1f8e9; border-radius:10px;">
+
+   
+</div>
+    <div id="dataAbsensi">
+        Memuat data absensi...
+    </div>
+
+</div>
+
+
+<script>
+
+function tampilkanWaktu() {
+
+    const sekarang = new Date();
+
+    const waktuWIB = sekarang.toLocaleString("id-ID", {
+        timeZone: "Asia/Jakarta",
+        hour12: false,
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+    });
+
+    document.getElementById("waktu").textContent = waktuWIB;
+}
+
+
+async function loadAbsensi() {
+
+    const { data, error } = await supabaseClient
+        .from("absensi guru RIS")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(8);
+
+    if (error) {
+
+        console.log(error);
+
+        document.getElementById("dataAbsensi").textContent =
+            "Gagal mengambil data absensi.";
+
+        return;
+    }
+
+    const tempat = document.getElementById("dataAbsensi");
+
+    if (!data || data.length === 0) {
+
+        tempat.textContent = "Belum ada data absensi.";
+
+        return;
+    }
+
+    tempat.innerHTML = data.map(function(item) {
+
+        let tombolFoto = "Foto tidak tersedia";
+
+        if (item.foto && item.foto.endsWith(".jpg")) {
+
+            const { data: fotoData } =
+                supabaseClient.storage
+                .from("foto-absensi")
+                .getPublicUrl(item.foto);
+
+            tombolFoto =
+                `<br><a href="${fotoData.publicUrl}" target="_blank">
+                    LIHAT FOTO
+                </a>`;
+        }
+
+        return `
+            <div style="border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:8px;">
+
+                <strong>${item.nama_guru}</strong><br>
+
+                Tanggal: ${item.tanggal}<br>
+
+                Waktu: ${item.waktu}<br>
+
+                Status: ${item.status_absen}<br>
+
+                Lokasi: ${item.status_lokasi}<br>
+
+                Jarak: ${item.jarak_meter ?? "-"} meter
+
+                ${tombolFoto}
+
+            </div>
+        `;
+
+    }).join("");
+}
+
+
+let fotoPath = "";
+let latitudeGuru = null;
+let longitudeGuru = null;
+let jarakGuru = null;
+
+
+async function absenMasuk() {
+
+    const guru = document.getElementById("guru").value;
+    const statusLokasi = document.getElementById("lokasi").textContent;
+    const statusFoto = document.getElementById("statusFoto").textContent;
+
+    if (guru === "") {
+        alert("Silakan pilih nama guru terlebih dahulu.");
+        return;
+    }
+
+    if (!statusLokasi.startsWith("LOKASI VALID")) {
+        alert("Lokasi belum valid. Silakan cek lokasi terlebih dahulu.");
+        return;
+    }
+
+    if (statusFoto !== "Foto sudah diambil") {
+        alert("Silakan ambil foto terlebih dahulu.");
+        return;
+    }
+
+    const dataAbsensi = {
+        nama_guru: guru,
+
+        tanggal: new Date().toLocaleDateString("en-CA", {
+            timeZone: "Asia/Jakarta"
+        }),
+
+        waktu: new Date().toLocaleTimeString("en-GB", {
+            timeZone: "Asia/Jakarta",
+            hour12: false
+        }),
+
+        status_lokasi: "VALID",
+        jarak_meter: jarakGuru,
+        status_absen: "MASUK",
+        foto: fotoPath,
+        latitude: latitudeGuru,
+        longitude: longitudeGuru
+    };
+
+    const { error } = await supabaseClient
+        .from("absensi guru RIS")
+        .insert([dataAbsensi]);
+
+    if (error) {
+
+        console.log(error);
+
+        alert(
+            "ABSEN GAGAL DISIMPAN\n\n" +
+            error.message
+        );
+
+        return;
+    }
+
+    alert(
+        "ABSEN MASUK BERHASIL\n\n" +
+        "Guru: " + guru + "\n" +
+        "Data sudah tersimpan ke Supabase."
+    );
+
+    fotoPath = "";
+
+    document.getElementById("statusFoto").textContent =
+        "Belum diambil";
+
+    loadAbsensi();
+}
+
+
+async function absenPulang() {
+
+    const guru = document.getElementById("guru").value;
+    const statusLokasi = document.getElementById("lokasi").textContent;
+    const statusFoto = document.getElementById("statusFoto").textContent;
+
+    if (guru === "") {
+        alert("Silakan pilih nama guru terlebih dahulu.");
+        return;
+    }
+
+    if (!statusLokasi.startsWith("LOKASI VALID")) {
+        alert("Lokasi belum valid. Silakan cek lokasi terlebih dahulu.");
+        return;
+    }
+
+    if (statusFoto !== "Foto sudah diambil") {
+        alert("Silakan ambil foto terlebih dahulu.");
+        return;
+    }
+
+    const dataAbsensi = {
+        nama_guru: guru,
+
+        tanggal: new Date().toLocaleDateString("en-CA", {
+            timeZone: "Asia/Jakarta"
+        }),
+
+        waktu: new Date().toLocaleTimeString("en-GB", {
+            timeZone: "Asia/Jakarta",
+            hour12: false
+        }),
+
+        status_lokasi: "VALID",
+        jarak_meter: jarakGuru,
+        status_absen: "PULANG",
+        foto: fotoPath,
+        latitude: latitudeGuru,
+        longitude: longitudeGuru
+    };
+
+    const { error } = await supabaseClient
+        .from("absensi guru RIS")
+        .insert([dataAbsensi]);
+
+    if (error) {
+
+        alert(
+            "ABSEN PULANG GAGAL DISIMPAN\n\n" +
+            error.message
+        );
+
+        return;
+    }
+
+    alert(
+        "ABSEN PULANG BERHASIL\n\n" +
+        "Guru: " + guru + "\n" +
+        "Data sudah tersimpan ke Supabase."
+    );
+
+    fotoPath = "";
+
+    document.getElementById("statusFoto").textContent =
+        "Belum diambil";
+
+    loadAbsensi();
+}
+
+
+function cekLokasi() {
+
+    const latitudeSekolah = -0.946605;
+    const longitudeSekolah = 101.506459;
+    const radiusMaksimal = 50;
+
+    if (!navigator.geolocation) {
+    
+        document.getElementById("lokasi").textContent =
+            "Perangkat tidak mendukung lokasi.";
+
+        return;
+    }
+
+    document.getElementById("lokasi").textContent =
+        "Sedang memeriksa lokasi...";
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(posisi) {
+
+            latitudeGuru = posisi.coords.latitude;
+            longitudeGuru = posisi.coords.longitude;
+
+            const jarak = hitungJarak(
+                latitudeSekolah,
+                longitudeSekolah,
+                latitudeGuru,
+                longitudeGuru
+            );
+
+            jarakGuru = jarak;
+
+            if (jarak <= radiusMaksimal) {
+
+                document.getElementById("lokasi").textContent =
+                    "LOKASI VALID - Jarak " +
+                    jarak.toFixed(1) +
+                    " meter";
+
+            } else {
+
+                document.getElementById("lokasi").textContent =
+                    "LOKASI DITOLAK - Jarak " +
+                    jarak.toFixed(1) +
+                    " meter";
+            }
+        },
+
+        function() {
+
+            document.getElementById("lokasi").textContent =
+                "Lokasi tidak dapat diperoleh.";
+        }
+    );
+}
+
+
+function hitungJarak(lat1, lon1, lat2, lon2) {
+
+    const R = 6371000;
+
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) *
+        Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(
+        Math.sqrt(a),
+        Math.sqrt(1 - a)
+    );
+
+    return R * c;
+}
+
+
+function bukaKamera() {
+
+    navigator.mediaDevices.getUserMedia({
+        video: true
+    })
+
+    .then(function(stream) {
+
+        document.getElementById("kamera").srcObject = stream;
+
+    })
+
+    .catch(function(error) {
+
+        alert("Kamera tidak dapat dibuka.");
+
+    });
+}
+
+
+async function ambilFoto() {
+
+    const video = document.getElementById("kamera");
+    const canvas = document.getElementById("foto");
+    const context = canvas.getContext("2d");
+
+    context.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    document.getElementById("statusFoto").textContent =
+        "Foto sedang diupload...";
+
+    canvas.toBlob(async function(blob) {
+
+        if (!blob) {
+            alert("Foto gagal dibuat.");
+            return;
+        }
+
+        const namaFile =
+            "foto-" +
+            Date.now() +
+            ".jpg";
+
+        const { error } = await supabaseClient
+            .storage
+            .from("foto-absensi")
+            .upload(namaFile, blob, {
+                contentType: "image/jpeg",
+                upsert: false
+            });
+
+        if (error) {
+
+            console.log(error);
+
+            document.getElementById("statusFoto").textContent =
+                "Upload foto gagal";
+
+            alert(
+                "UPLOAD FOTO GAGAL\n\n" +
+                error.message
+            );
+
+            return;
+        }
+
+        fotoPath = namaFile;
+
+        document.getElementById("statusFoto").textContent =
+            "Foto sudah diambil";
+
+        alert(
+            "FOTO BERHASIL DISIMPAN! ✅\n\n" +
+            "Foto sudah masuk ke Supabase Storage."
+        );
+
+    }, "image/jpeg", 0.8);
+}
+
+
+tampilkanWaktu();
+
+setInterval(tampilkanWaktu, 1000);
+
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const supabaseClient = supabase.createClient(
+    "https://nfgjmnaydthzzluecgie.supabase.co",
+    "sb_publishable_KQl4PXsofvu_8v_kQatfug_DE9-Qa5t"
+);
+
+/* =========================
+   LOAD DATA GURU
+========================= */
+
+async function loadGuru() {
+
+    const { data, error } = await supabaseClient
+        .from("data_guru")
+        .select("nama_guru")
+        .eq("aktif", true)
+        .order("nama_guru");
+
+    if (error) {
+
+        console.error("Gagal mengambil data guru:", error);
+
+        return;
+    }
+
+
+    const selectGuru = document.getElementById("guru");
+
+    selectGuru.innerHTML =
+        '<option value="">-- Pilih Nama Guru --</option>';
+
+
+    const selectGuruEdit = document.getElementById("guruEdit");
+
+    selectGuruEdit.innerHTML =
+        '<option value="">-- Pilih Guru --</option>';
+
+
+    data.forEach(guru => {
+
+        const option = document.createElement("option");
+
+        option.value = guru.nama_guru;
+        option.textContent = guru.nama_guru;
+
+        selectGuru.appendChild(option);
+
+
+        const optionEdit = document.createElement("option");
+
+        optionEdit.value = guru.nama_guru;
+        optionEdit.textContent = guru.nama_guru;
+
+        selectGuruEdit.appendChild(optionEdit);
+
+    });
+}
+
+
+/* =========================
+   LOGIN ADMIN
+========================= */
+
+async function loginAdmin() {
+
+    const email =
+        document.getElementById("emailAdmin").value.trim();
+
+    const password =
+        document.getElementById("passwordAdmin").value;
+
+
+    if (!email || !password) {
+
+        alert("Email dan password wajib diisi.");
+
+        return;
+    }
+
+
+    const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+
+            email: email,
+            password: password
+
+        });
+
+
+    if (error) {
+
+        console.error("Login gagal:", error);
+
+        document.getElementById("statusLogin").textContent =
+            "Login gagal. Periksa email dan password.";
+
+        return;
+    }
+
+
+    document.getElementById("statusLogin").textContent =
+        "Login berhasil.";
+
+    document.getElementById("panel-admin").style.display =
+        "block";
+
+
+    console.log("Admin login:", data.user.email);
+
+    await loadGuru();
+}
+
+
+/* =========================
+   TAMBAH GURU
+========================= */
+
+async function tambahGuru() {
+
+    const input =
+        document.getElementById("namaGuruBaru");
+
+    const nama =
+        input.value.trim();
+
+
+    if (!nama) {
+
+        alert("Nama guru belum diisi.");
+
+        return;
+    }
+
+
+    const { error } = await supabaseClient
+        .from("data_guru")
+        .insert({
+            nama_guru: nama,
+            aktif: true
+        });
+
+
+    if (error) {
+
+    console.error("Gagal menambah guru:", error);
+
+    alert(
+        "Gagal menambahkan guru.\n\n" +
+        error.message
+    );
+
+    return;
+}
+
+alert("Guru berhasil ditambahkan.");
+
+input.value = "";
+
+await loadGuru();
+
+}
+
+/* =========================
+   EDIT GURU
+========================= */
+
+async function editGuru() {
+
+    const guruLama =
+        document.getElementById("guruEdit").value;
+
+    const namaBaru =
+        document.getElementById("namaGuruEdit").value.trim();
+
+
+    if (!guruLama) {
+
+        alert("Pilih guru yang akan diedit.");
+
+        return;
+    }
+
+
+    if (!namaBaru) {
+
+        alert("Nama baru belum diisi.");
+
+        return;
+    }
+
+
+    const { error } = await supabaseClient
+        .from("data_guru")
+        .update({
+            nama_guru: namaBaru
+        })
+        .eq("nama_guru", guruLama);
+
+
+    if (error) {
+
+        console.error("Gagal mengubah guru:", error);
+
+        alert(
+            "Gagal mengubah nama guru.\n\n" +
+            error.message
+        );
+
+        return;
+    }
+
+
+    alert("Nama guru berhasil diubah.");
+
+    document.getElementById("namaGuruEdit").value = "";
+
+    await loadGuru();
+}
+
+
+/* =========================
+   NONAKTIFKAN GURU
+========================= */
+
+async function nonaktifkanGuru() {
+
+    const guru =
+        document.getElementById("guruEdit").value;
+
+
+    if (!guru) {
+
+        alert("Pilih guru yang akan dinonaktifkan.");
+
+        return;
+    }
+
+
+    const yakin = confirm(
+        "Nonaktifkan guru:\n\n" +
+        guru +
+        "\n\nGuru tidak akan muncul lagi di dropdown absensi."
+    );
+
+
+    if (!yakin) {
+
+        return;
+    }
+
+
+    const { error } = await supabaseClient
+        .from("data_guru")
+        .update({
+            aktif: false
+        })
+        .eq("nama_guru", guru);
+
+
+    if (error) {
+
+        console.error(
+            "Gagal menonaktifkan guru:",
+            error
+        );
+
+        alert(
+            "Gagal menonaktifkan guru.\n\n" +
+            error.message
+        );
+
+        return;
+    }
+
+
+    alert(
+        "Guru berhasil dinonaktifkan.\n\n" +
+        guru +
+        "\n\nData guru tidak dihapus."
+    );
+
+
+    document.getElementById("namaGuruEdit").value = "";
+
+    await loadGuru();
+}
+
+
+loadGuru();
+async function downloadRekapBulanan() {
+
+    const bulan =
+        document.getElementById("bulanRekap").value;
+
+    if (!bulan) {
+        alert("Silakan pilih bulan terlebih dahulu.");
+        return;
+    }
+
+    const [tahun, nomorBulan] = bulan.split("-");
+
+    const tanggalAwal =
+        `${tahun}-${nomorBulan}-01`;
+
+    const tanggalAkhir =
+        new Date(
+            Number(tahun),
+            Number(nomorBulan),
+            0
+        ).getDate();
+
+    const tanggalTerakhir =
+        `${tahun}-${nomorBulan}-${String(tanggalAkhir).padStart(2, "0")}`;
+
+
+    const { data, error } = await supabaseClient
+        .from("absensi guru RIS")
+        .select("*")
+        .gte("tanggal", tanggalAwal)
+        .lte("tanggal", tanggalTerakhir)
+        .order("tanggal", { ascending: true })
+        .order("nama_guru", { ascending: true });
+
+
+    if (error) {
+
+        console.error("Gagal mengambil rekap:", error);
+
+        alert(
+            "Gagal mengambil data rekap.\n\n" +
+            error.message
+        );
+
+        return;
+    }
+
+
+    if (!data || data.length === 0) {
+
+        alert(
+            "Tidak ada data absensi untuk bulan tersebut."
+        );
+
+        return;
+    }
+
+
+    const header = [
+        "No",
+        "Nama Guru",
+        "Tanggal",
+        "Waktu",
+        "Status Absen",
+        "Status Lokasi",
+        "Jarak (Meter)"
+    ];
+
+
+    const rows = data.map((item, index) => {
+
+        return [
+            index + 1,
+            item.nama_guru || "",
+            item.tanggal || "",
+            item.waktu || "",
+            item.status_absen || "",
+            item.status_lokasi || "",
+            item.jarak_meter ?? ""
+        ];
+    });
+
+
+    const csv = [
+        header,
+        ...rows
+    ]
+    .map(row =>
+        row.map(value =>
+            `"${String(value).replace(/"/g, '""')}"`
+        ).join(",")
+    )
+    .join("\n");
+
+
+    const blob = new Blob(
+        ["\uFEFF" + csv],
+        {
+            type: "text/csv;charset=utf-8;"
+        }
+    );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+   link.download =
+    `Rekap_Absensi_SD_${tahun}-${nomorBulan}.csv`;
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+
+
+    alert(
+        "Rekap berhasil dibuat.\n\n" +
+        `Periode: ${nomorBulan}/${tahun}\n` +
+        `Jumlah data: ${data.length}`
+    );
+}
+async function ambilDataRekapBulanan() {
+
+    const bulan = document.getElementById("bulanRekap").value;
+
+    if (!bulan) {
+        alert("Silakan pilih bulan terlebih dahulu.");
+        return null;
+    }
+
+    const [tahun, nomorBulan] = bulan.split("-");
+
+    const tanggalAwal = `${tahun}-${nomorBulan}-01`;
+
+    const tanggalAkhirObj = new Date(
+        Number(tahun),
+        Number(nomorBulan),
+        0
+    );
+
+    const tanggalAkhir =
+        `${tahun}-${nomorBulan}-${String(
+            tanggalAkhirObj.getDate()
+        ).padStart(2, "0")}`;
+
+    const { data, error } = await supabaseClient
+        .from("absensi guru RIS")
+        .select("*")
+        .gte("tanggal", tanggalAwal)
+        .lte("tanggal", tanggalAkhir)
+        .order("tanggal", { ascending: true })
+        .order("nama_guru", { ascending: true });
+
+    if (error) {
+
+        console.error("Gagal mengambil rekap:", error);
+
+        alert(
+            "Gagal mengambil rekap.\n\n" +
+            error.message
+        );
+
+        return null;
+    }
+
+    return data || [];
+}
+
+
+async function tampilkanRekapBulanan() {
+
+    const data = await ambilDataRekapBulanan();
+
+    if (data === null) {
+        return;
+    }
+
+    const tempat =
+        document.getElementById("hasilRekapBulanan");
+
+    if (data.length === 0) {
+
+        tempat.innerHTML =
+            "<p><strong>Belum ada data absensi pada bulan tersebut.</strong></p>";
+
+        return;
+    }
+
+    const rekap = {};
+
+    data.forEach(item => {
+
+        const nama = item.nama_guru;
+
+        if (!rekap[nama]) {
+            rekap[nama] = {
+                masuk: null,
+                pulang: null,
+                hari: 0
+            };
+        }
+
+        if (item.status_absen === "MASUK") {
+            rekap[nama].masuk = item.waktu;
+        }
+
+        if (item.status_absen === "PULANG") {
+            rekap[nama].pulang = item.waktu;
+        }
+    });
+
+
+    Object.keys(rekap).forEach(nama => {
+
+        const item = rekap[nama];
+
+        if (item.masuk && item.pulang) {
+
+            const masuk = item.masuk.split(":");
+            const pulang = item.pulang.split(":");
+
+            const menitMasuk =
+                Number(masuk[0]) * 60 +
+                Number(masuk[1]);
+
+            const menitPulang =
+                Number(pulang[0]) * 60 +
+                Number(pulang[1]);
+
+            const durasiAktual =
+                menitPulang - menitMasuk;
+
+            const durasiNormal = 450;
+
+            let persen =
+                (durasiAktual / durasiNormal) * 100;
+
+            persen = Math.max(0, Math.min(100, persen));
+
+            item.persen = persen.toFixed(0);
+            item.hari = 1;
+
+        } else {
+
+            item.persen = 0;
+        }
+    });
+
+
+    let html = `
+        <div style="
+            overflow-x:auto;
+            background:#ffffff;
+            padding:10px;
+            border-radius:8px;
+        ">
+
+        <table style="
+            width:100%;
+            border-collapse:collapse;
+        ">
+
+        <tr style="background:#1565C0;color:white;">
+
+            <th style="padding:8px;border:1px solid #ddd;">
+                No
+            </th>
+
+            <th style="padding:8px;border:1px solid #ddd;">
+                Nama Guru
+            </th>
+
+            <th style="padding:8px;border:1px solid #ddd;">
+                Hari Hadir
+            </th>
+
+            <th style="padding:8px;border:1px solid #ddd;">
+                Persentase
+            </th>
+
+        </tr>
+    `;
+
+
+    let nomor = 1;
+
+    Object.keys(rekap)
+        .sort()
+        .forEach(nama => {
+
+            html += `
+                <tr>
+
+                    <td style="padding:8px;border:1px solid #ddd;text-align:center;">
+                        ${nomor++}
+                    </td>
+
+                    <td style="padding:8px;border:1px solid #ddd;">
+                        ${nama}
+                    </td>
+
+                    <td style="padding:8px;border:1px solid #ddd;text-align:center;">
+                        ${rekap[nama].hari}
+                    </td>
+
+                    <td style="
+                        padding:8px;
+                        border:1px solid #ddd;
+                        text-align:center;
+                        font-weight:bold;
+                    ">
+                        ${rekap[nama].persen}%
+                    </td>
+
+                </tr>
+            `;
+        });
+
+
+    html += `
+        </table>
+        </div>
+    `;
+
+
+    tempat.innerHTML = html;
+}
+async function downloadRekapBulanan() {
+
+    const data = await ambilDataRekapBulanan();
+
+    if (data === null) {
+        return;
+    }
+
+    if (data.length === 0) {
+        alert("Belum ada data absensi pada bulan tersebut.");
+        return;
+    }
+
+    const rekap = {};
+
+    data.forEach(item => {
+
+        const nama = item.nama_guru;
+
+        if (!rekap[nama]) {
+            rekap[nama] = {
+                masuk: null,
+                pulang: null,
+                hari: 0,
+                persen: 0
+            };
+        }
+
+        if (item.status_absen === "MASUK") {
+            rekap[nama].masuk = item.waktu;
+        }
+
+        if (item.status_absen === "PULANG") {
+            rekap[nama].pulang = item.waktu;
+        }
+    });
+
+
+    Object.keys(rekap).forEach(nama => {
+
+        const item = rekap[nama];
+
+        if (item.masuk && item.pulang) {
+
+            const masuk = item.masuk.split(":");
+            const pulang = item.pulang.split(":");
+
+            const menitMasuk =
+                Number(masuk[0]) * 60 +
+                Number(masuk[1]);
+
+            const menitPulang =
+                Number(pulang[0]) * 60 +
+                Number(pulang[1]);
+
+            const durasiAktual =
+                menitPulang - menitMasuk;
+
+            const durasiNormal = 450;
+
+            let persen =
+                (durasiAktual / durasiNormal) * 100;
+
+            persen = Math.max(0, Math.min(100, persen));
+
+            item.persen = persen.toFixed(0);
+            item.hari = 1;
+        }
+    });
+
+
+    const bulan =
+        document.getElementById("bulanRekap").value;
+
+
+    const header = [
+        "No",
+        "Nama Guru",
+        "Hari Hadir",
+        "Persentase"
+    ];
+
+
+    const rows = [];
+
+    let nomor = 1;
+
+
+    Object.keys(rekap)
+        .sort()
+        .forEach(nama => {
+
+            rows.push([
+                nomor++,
+                nama,
+                rekap[nama].hari,
+                rekap[nama].persen + "%"
+            ]);
+
+        });
+
+
+    const csv = [
+        header,
+        ...rows
+    ]
+    .map(row =>
+        row.map(value =>
+            `"${String(value).replace(/"/g, '""')}"`
+        ).join(",")
+    )
+    .join("\n");
+
+
+    const blob = new Blob(
+        ["\uFEFF" + csv],
+        {
+            type: "text/csv;charset=utf-8;"
+        }
+    );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href = url;
+
+    link.download =
+        `Rekap_Absensi_SD_${bulan}.csv`;
+
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+
+
+    alert(
+        "Rekap SD berhasil didownload."
+    );
+}</script>
+<footer style="
+    margin-top: 30px;
+    padding: 20px 10px;
+    text-align: center;
+    font-size: 13px;
+    color: #666;
+    border-top: 1px solid #c8e6c9;
+">
+
+    <p style="margin: 5px 0;">
+        Aplikasi ini dikembangkan oleh <strong>HUI TEKNO</strong>.
+    </p>
+
+    <p style="margin: 5px 0;">
+        Membutuhkan solusi digital?
+        Hubungi: <strong>085831434588</strong>
+    </p>
+
+</footer>
+</body>
+</html>

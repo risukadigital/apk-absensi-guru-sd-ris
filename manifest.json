@@ -1,0 +1,17 @@
+{
+  "name": "Absensi Guru - SMP Raudhah Islamic School",
+  "short_name": "Absensi Guru",
+  "description": "Aplikasi absensi guru SMP Raudhah Islamic School",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#159447",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
